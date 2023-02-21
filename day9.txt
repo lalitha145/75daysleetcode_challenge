@@ -1,0 +1,126 @@
+Day 9:
+1)Flood fill
+
+An image is represented by an m x n integer grid image where image[i][j] represents the pixel value of the image.
+
+You are also given three integers sr, sc, and color. You should perform a flood fill on the image starting from the pixel image[sr][sc].
+
+To perform a flood fill, consider the starting pixel, plus any pixels connected 4-directionally to the starting pixel of the same color as the starting pixel, plus any pixels connected 4-directionally to those pixels (also with the same color), and so on. Replace the color of all of the aforementioned pixels with color.
+
+Return the modified image after performing the flood fill.
+
+ 
+
+Example 1:
+
+
+Input: image = [[1,1,1],[1,1,0],[1,0,1]], sr = 1, sc = 1, color = 2
+Output: [[2,2,2],[2,2,0],[2,0,1]]
+Explanation: From the center of the image with position (sr, sc) = (1, 1) (i.e., the red pixel), all pixels connected by a path of the same color as the starting pixel (i.e., the blue pixels) are colored with the new color.
+Note the bottom corner is not colored 2, because it is not 4-directionally connected to the starting pixel.
+Example 2:
+
+Input: image = [[0,0,0],[0,0,0]], sr = 0, sc = 0, color = 0
+Output: [[0,0,0],[0,0,0]]
+Explanation: The starting pixel is already colored 0, so no changes are made to the image.
+
+
+Code:
+
+class Solution {
+  
+    public int[][] floodFill(int[][] image, int sr, int sc, int color) {
+        int [][]ans=new int[image.length][image[0].length];
+        boolean visited[][]=new boolean[image.length][image[0].length];
+        for(int i=0;i<image.length;i++){
+            for(int j=0;j<image[0].length;j++){
+                ans[i][j]=image[i][j];
+            }
+        }
+        int temp=image[sr][sc];
+        DFS(image,sr,sc,color,temp,visited,ans);
+        return ans;
+     
+    }
+    static void DFS(int [][]image,int sr,int sc,int color,int temp,boolean[][]visited,int[][] ans){
+        if(sr<0 || sc<0 || sr>=image.length || sc>=image[0].length){
+            return;
+        }
+        if(!visited[sr][sc] && image[sr][sc]==temp){
+            visited[sr][sc]=true;
+            ans[sr][sc]=color;
+            DFS(image,sr-1,sc,color,temp,visited,ans);
+            DFS(image,sr,sc-1,color,temp,visited,ans);
+            DFS(image,sr,sc+1,color,temp,visited,ans);
+            DFS(image,sr+1,sc,color,temp,visited,ans);
+
+        }
+    }
+}
+
+
+2)Number of Ilands
+
+
+Given an m x n 2D binary grid grid which represents a map of '1's (land) and '0's (water), return the number of islands.
+
+An island is surrounded by water and is formed by connecting adjacent lands horizontally or vertically. You may assume all four edges of the grid are all surrounded by water.
+
+ 
+
+Example 1:
+
+Input: grid = [
+  ["1","1","1","1","0"],
+  ["1","1","0","1","0"],
+  ["1","1","0","0","0"],
+  ["0","0","0","0","0"]
+]
+Output: 1
+Example 2:
+
+Input: grid = [
+  ["1","1","0","0","0"],
+  ["1","1","0","0","0"],
+  ["0","0","1","0","0"],
+  ["0","0","0","1","1"]
+]
+Output: 3
+
+
+
+
+Code:
+
+class Solution {
+  
+  static void getConnectedCom(char[][] grid,int row,int col,boolean[][] visited){
+      if(row>=grid.length|| col>=grid[0].length|| row<0 || col<0 || grid[row][col]=='0'){
+        return;
+      }
+      if(!visited[row][col]){
+        visited[row][col]=true;
+        getConnectedCom(grid,row-1,col,visited);//top
+        getConnectedCom(grid,row,col-1,visited);//left
+        getConnectedCom(grid,row+1,col,visited);//down
+        getConnectedCom(grid,row,col+1,visited);//right
+       
+
+      }
+    }
+    public int numIslands(char[][] grid) {
+        
+      
+      int count=0;
+      boolean[][] visited=new boolean[grid.length][grid[0].length];
+      for(int i=0;i<grid.length;i++){
+        for(int j=0;j<grid[0].length;j++){
+          if(!visited[i][j] && grid[i][j]!='0'){
+             getConnectedCom(grid,i,j,visited);
+             count++;
+          }
+        }
+      }
+      return count;
+    }   
+}
