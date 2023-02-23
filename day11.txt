@@ -1,0 +1,105 @@
+Day 11
+
+1)Min Cost Climbing Stairs
+
+You are given an integer array cost where cost[i] is the cost of ith step on a staircase. Once you pay the cost, you can either climb one or two steps.
+
+You can either start from the step with index 0, or the step with index 1.
+
+Return the minimum cost to reach the top of the floor.
+
+ 
+
+Example 1:
+
+Input: cost = [10,15,20]
+Output: 15
+Explanation: You will start at index 1.
+- Pay 15 and climb two steps to reach the top.
+The total cost is 15.
+Example 2:
+
+Input: cost = [1,100,1,1,1,100,1,1,100,1]
+Output: 6
+Explanation: You will start at index 0.
+- Pay 1 and climb two steps to reach index 2.
+- Pay 1 and climb two steps to reach index 4.
+- Pay 1 and climb two steps to reach index 6.
+- Pay 1 and climb one step to reach index 7.
+- Pay 1 and climb two steps to reach index 9.
+- Pay 1 and climb one step to reach the top.
+The total cost is 6.
+
+Code:
+
+class Solution {
+    public int minCostClimbingStairs(int[] cost) {
+        int n = cost.length;
+        
+        return solve3(cost,n);
+    }
+    
+    public int solve3(int[] cost, int n){
+        int prev2 = cost[0];
+        int prev1 = cost[1];
+
+        for(int i = 2;i<n;i++){
+            int curr = cost[i] + Math.min(prev1,prev2);
+            prev2 = prev1;
+            prev1 = curr;
+        }
+        return Math.min(prev1,prev2);
+    }
+}
+
+
+
+2)Unique Paths
+
+There is a robot on an m x n grid. The robot is initially located at the top-left corner (i.e., grid[0][0]). The robot tries to move to the bottom-right corner (i.e., grid[m - 1][n - 1]). The robot can only move either down or right at any point in time.
+
+Given the two integers m and n, return the number of possible unique paths that the robot can take to reach the bottom-right corner.
+
+The test cases are generated so that the answer will be less than or equal to 2 * 109.
+
+ 
+
+Example 1:
+
+
+Input: m = 3, n = 7
+Output: 28
+Example 2:
+
+Input: m = 3, n = 2
+Output: 3
+Explanation: From the top-left corner, there are a total of 3 ways to reach the bottom-right corner:
+1. Right -> Down -> Down
+2. Down -> Down -> Right
+3. Down -> Right -> Down
+
+
+  Code:
+
+class Solution {
+    public int uniquePaths(int m, int n) {
+        int [][] grid = new int [m][n];
+        for(int k = 0; k < m; k++) grid[k][0] = 1;
+        for(int k = 0; k < n; k++) grid[0][k] = 1;
+
+        for(int k = 0; k < m; k++)
+        {
+            for(int j = 0; j < n; j++)
+            {
+                if(grid[k][j] == 1) continue;
+                else
+                {
+                    grid[k][j] = grid[k-1][j] + grid[k] [j-1]; 
+                }
+            }
+        }
+        return grid[m-1][n-1];
+    }
+}
+
+
