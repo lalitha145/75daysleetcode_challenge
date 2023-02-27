@@ -1,0 +1,89 @@
+Day 15:
+1)Last Stone Weight
+
+You are given an array of integers stones where stones[i] is the weight of the ith stone.
+
+We are playing a game with the stones. On each turn, we choose the heaviest two stones and smash them together. Suppose the heaviest two stones have weights x and y with x <= y. The result of this smash is:
+
+If x == y, both stones are destroyed, and
+If x != y, the stone of weight x is destroyed, and the stone of weight y has new weight y - x.
+At the end of the game, there is at most one stone left.
+
+Return the weight of the last remaining stone. If there are no stones left, return 0.
+
+ 
+
+Example 1:
+
+Input: stones = [2,7,4,1,8,1]
+Output: 1
+Explanation: 
+We combine 7 and 8 to get 1 so the array converts to [2,4,1,1,1] then,
+we combine 2 and 4 to get 2 so the array converts to [2,1,1,1] then,
+we combine 2 and 1 to get 1 so the array converts to [1,1,1] then,
+we combine 1 and 1 to get 0 so the array converts to [1] then that's the value of the last stone.
+
+Code:
+class Solution {
+    public int lastStoneWeight(int[] stones) {
+        PriorityQueue<Integer> q=new PriorityQueue<Integer>((a,b)->b-a);
+        for(int i:stones){
+            q.offer(i);
+        }
+        System.out.println(q);
+        while(q.size()>1){
+            int n1=q.poll();
+            int n2=q.poll();
+            if(n1!=n2){
+                q.offer(n1-n2);
+            }
+        }
+        return q.size()==0?0 :q.poll();
+    }
+}
+
+
+2)Top K Frequent Words
+Given an array of strings words and an integer k, return the k most frequent strings.
+
+Return the answer sorted by the frequency from highest to lowest. Sort the words with the same frequency by their lexicographical order.
+
+ 
+
+Example 1:
+
+Input: words = ["i","love","leetcode","i","love","coding"], k = 2
+Output: ["i","love"]
+Explanation: "i" and "love" are the two most frequent words.
+Note that "i" comes before "love" due to a lower alphabetical order.
+Example 2:
+
+Input: words = ["the","day","is","sunny","the","the","the","sunny","is","is"], k = 4
+Output: ["the","is","sunny","day"]
+Explanation: "the", "is", "sunny" and "day" are the four most frequent words, with the number of occurrence being 4, 3, 2 and 1 respectively.
+
+
+Code:
+
+class Solution {
+  public List<String> topKFrequent(String[] words, int k) {
+      List<String> ans=new ArrayList<>();
+        HashMap<String,Integer> map=new HashMap<>();
+        for(int i=0;i<words.length;i++){
+            map.put(words[i],map.getOrDefault(words[i],0)+1);
+        }
+         PriorityQueue<String> pq= new PriorityQueue<>((a,b)-> map.get(b)-map.get(a));
+         for(String s:map.keySet()){
+             pq.add(s);
+         }
+         int c=0;
+         while(!pq.isEmpty() && c<k){
+           ans.add(pq.poll());
+            c++;
+        }
+        Collections.reverse(ans);
+       return ans;
+
+    }
+}
+
